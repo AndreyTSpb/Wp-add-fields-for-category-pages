@@ -102,3 +102,101 @@ function wpm123affcp_save_custom_taxonomy_meta( $term_id ) {
 
     return $term_id;
 }
+
+/**
+ * наш заголовк
+ * @param $term_name
+ * @return mixed
+ */
+function wpm123affcp_filter_single_cat_title($term_name) {
+
+    $terms = get_category( get_query_var('cat'));
+    $cat_id = $terms->cat_ID;
+    $term_name = get_term_meta ($cat_id, 'title', true);
+
+    /**
+     * если заголовок не заполнен
+     */
+    if(empty($term_name)){
+        $terms = get_category( get_query_var( 'cat' ));
+        $cat_id = $terms->cat_ID;
+        $term_name = get_cat_name($cat_id);
+    }
+
+    return $term_name;
+}
+
+add_filter('single_cat_title', 'wpm123affcp_filter_single_cat_title', 10, 1 );
+
+/**
+ * Получаем стандартный заголовок категории
+ */
+function get_cat_caption() {
+    $terms = get_category( get_query_var( 'cat' ));
+    $cat_id = $terms->cat_ID;
+    $caption = get_cat_name($cat_id);
+    return $caption;
+}
+
+/**
+ * Получаем наш заголовок страницы H1
+ */
+function the_wpaffcp_h1() {
+    $terms = get_category( get_query_var( 'cat' ));
+    $cat_id = $terms->cat_ID;
+
+    $name_cat = get_term_meta ( $cat_id, 'h1', true );
+    if(empty($name_cat)){
+        $name_cat = get_cat_caption();
+    }
+    echo $name_cat;
+}
+
+function wpaffcp_description(){
+    if(is_category()){
+        $terms = get_category( get_query_var( 'cat' ));
+        $category_id = $terms->cat_ID;
+
+        $description = get_term_meta ( $category_id, 'description', true );
+        if(!empty($description)){
+            $meta = '<meta name="description"  content="'.$description.'" />'."\n";
+        }
+        else {
+            $description = wp_filter_nohtml_kses(substr(category_description(), 0, 280));
+            $meta = '<meta name="description"  content="'.$description.'" />'."\n";
+        }
+        echo $meta;
+    }
+}
+add_action('wp_head', 'wpaffcp_description', 1, 1);
+
+/**
+ * Вывод ключевиков для категории
+ * @param $keywords
+ */
+function wpaffcp_keywords(){
+    if(is_category()){
+
+        $terms = get_category( get_query_var( 'cat' ));
+        $cat_id = $terms->cat_ID;
+
+        $keywords = get_term_meta ( $cat_id, 'keywords', true );
+        echo '<meta name="keywords" content="'.$keywords.'">'."\n";
+    }
+}
+
+add_action('wp_head', 'wpaffcp_keywords', 1, 1);
+
+/**
+ * Вывод текста для категории
+ */
+function the_wpaffcp_cat_text(){
+    if(is_category()){
+
+        $terms = get_category( get_query_var( 'cat' ));
+        $cat_id = $terms->cat_ID;
+
+        $text = get_term_meta ( $cat_id, 'text', true );
+        echo $text;
+    }
+}
