@@ -8,7 +8,7 @@
 /**
  * Plugin Name: Math123 add fields for category pages
  * Description: Плагин для добавления описания к категориям.
- * Plugin URI: https://
+ * Plugin URI: https://github.com/AndreyTSpb/Wp-add-fields-for-category-pages
  * Author: Andrey Tynyany
  * Version: 1.0.1
  * Author URI: http://tynyany.ru
